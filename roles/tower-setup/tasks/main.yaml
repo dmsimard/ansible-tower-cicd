@@ -1,0 +1,127 @@
+---
+#  Copyright (c) 2018 Red Hat, Inc.
+#
+#  This file is part of ansible-tower-cicd.
+#
+#  ansible-tower-cicd is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  ansible-tower-cicd is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with ansible-tower-cicd.  If not, see <http://www.gnu.org/licenses/>.
+
+# Fail early if no license is provided
+- when: tower_setup_license_configure | bool
+  block:
+    - name: Check if license file exists
+      stat:
+        path: "{{ tower_setup_license_file }}"
+      delegate_to: localhost
+      register: license_exists
+      tags:
+        - tower-license
+
+    - name: Assert that license file is provided
+      fail:
+        msg: >-
+          License file at {{ tower_setup_license_file }} doesn't exist.
+          You can either download your license to that location or provide an
+          alternative path for the 'tower_setup_license' variable.
+      when: not license_exists.stat.exists
+      tags:
+        - tower-license
+
+# TODO: Make this task idempotent
+- name: Ensure the extras repository is enabled
+  become: yes
+  command: yum-config-manager --enable extras
+  tags:
+    - tower-install
+
+- name: Download Tower setup
+  get_url:
+    url: "{{ tower_setup_release_url }}"
+    dest: /var/tmp
+  register: tower_download
+  tags:
+    - tower-install
+
+- name: Extract Tower setup
+  unarchive:
+    src: "/var/tmp/{{ tower_setup_archive }}"
+    dest: /var/tmp
+    remote_src: yes
+  when: tower_download is changed
+  tags:
+    - tower-install
+
+- name: Create tower-setup configuration directory
+  become: yes
+  file:
+    path: /etc/tower-setup
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+  tags:
+    - tower-install
+
+- name: Create inventory file
+  become: yes
+  no_log: yes
+  copy:
+    content: "{{ tower_setup_inventory | to_nice_yaml(indent=2) }}"
+    dest: "{{ tower_setup_inventory_file }}"
+    owner: root
+    group: root
+    mode: 0600
+  tags:
+    - tower-install
+
+- name: Run Tower setup
+  become: yes
+  vars:
+    setup: "/var/tmp/{{ tower_setup_basename }}-{{ tower_setup_version }}/setup.sh"
+  command: "{{ setup }} -i {{ tower_setup_inventory_file }} -e create_preload_data=False"
+  tags:
+    - tower-install
+
+- name: Install ansible-tower-cli
+  become: yes
+  yum:
+    name: ansible-tower-cli
+    state: present
+  tags:
+    - tower-cli
+
+# ini_file is used instead of ``tower-cli config`` because tower-cli doesn't
+# accept blank (null) values for configuration options.
+- name: Configure tower-cli
+  become: yes
+  no_log: yes
+  ini_file:
+    path: /etc/tower/tower_cli.cfg
+    section: general
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    owner: root
+    group: root
+    mode: 0600
+  with_dict: "{{ tower_setup_cli_config }}"
+  tags:
+    - tower-cli
+
+# TODO: Write a tower_license module
+- name: Configure or update license
+  no_log: yes
+  vars:
+    license: "{{ lookup('file', tower_setup_license_file) | from_json }}"
+  command: tower-cli setting modify LICENSE '{{ license | to_json }}'
+  tags:
+    - tower-license

@@ -1,0 +1,46 @@
+---
+#  Copyright (c) 2018 Red Hat, Inc.
+#
+#  This file is part of ansible-tower-cicd.
+#
+#  ansible-tower-cicd is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  ansible-tower-cicd is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with ansible-tower-cicd.  If not, see <http://www.gnu.org/licenses/>.
+
+tower_setup_basename: ansible-tower-setup
+tower_setup_version: 3.2.5
+tower_setup_archive: "{{ tower_setup_basename }}-{{ tower_setup_version }}.tar.gz"
+tower_setup_release_url: "https://releases.ansible.com/ansible-tower/setup/{{ tower_setup_archive }}"
+
+tower_setup_license_configure: True
+# This is a location on the *control* node where Ansible is being run from.
+# Note that the Ansible Tower license file does not contain a key for "eula_accepted".
+# When supplying this file, you'll need to manually add an '"eula_accepted": true'
+# key to the json file.
+tower_setup_license_file: /root/tower-license.json
+
+tower_setup_inventory_file: /etc/tower-setup/tower-setup-inventory.yaml
+# TODO: Is there a better way ?
+tower_setup_inventory: "{{ lookup('file', playbook_dir + '/../inventory.yaml') | from_yaml }}"
+
+tower_setup_cli_config:
+  host: "http://localhost"
+  username: "{{ tower_setup_inventory.all.vars.admin_username }}"
+  password: "{{ tower_setup_inventory.all.vars.admin_password }}"
+  verify_ssl: false
+  use_token: false
+  verbose: false
+  certificate:
+  format: human
+  color: true
+  description_on:
+  oauth_token:

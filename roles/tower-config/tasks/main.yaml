@@ -1,0 +1,126 @@
+---
+#  Copyright (c) 2018 Red Hat, Inc.
+#
+#  This file is part of ansible-tower-cicd.
+#
+#  ansible-tower-cicd is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  ansible-tower-cicd is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with ansible-tower-cicd.  If not, see <http://www.gnu.org/licenses/>.
+
+- name: Configure Tower organizations
+  tower_organization:
+    name: "{{ item.name }}"
+    description: "{{ item.description | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
+    tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  with_items: "{{ tower_config_organizations }}"
+
+- name: Configure Tower teams
+  tower_team:
+    name: "{{ item.name }}"
+    organization: "{{ item.organization }}"
+    description: "{{ item.description | default(omit) }}"
+    tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  with_items: "{{ tower_config_teams }}"
+
+- name: Configure Tower users
+  tower_user:
+    username: "{{ item.username }}"
+    password: "{{ item.password }}"
+    email: "{{ item.email }}"
+    first_name: "{{ item.first_name }}"
+    last_name: "{{ item.last_name }}"
+    tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  with_items: "{{ tower_config_users }}"
+
+- name: Configure Tower roles
+  tower_role:
+    user: "{{ item.user }}"
+    target_team: "{{ item.target_team }}"
+    role: "{{ item.role }}"
+    tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  with_items: "{{ tower_config_roles }}"
+
+- name: Configure Tower credentials
+  tower_credential:
+    name: "{{ item.name }}"
+    description: "{{ item.description | default(omit) }}"
+    organization: "{{ item.organization }}"
+    kind: "{{ item.kind }}"
+    username: "{{ item.username | default(omit) }}"
+    password: "{{ item.password | default(omit) }}"
+    host: "{{ item.host | default(omit) }}"
+    tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  with_items: "{{ tower_config_credentials }}"
+
+- name: Configure Tower projects
+  tower_project:
+    name: "{{ item.name }}"
+    organization: "{{ item.organization }}"
+    description: "{{ item.description | default(omit) }}"
+    local_path: "{{ item.local_path | default(omit) }}"
+    scm_type: "{{ item.scm_type | default(omit) }}"
+    scm_credential: "{{ item.scm_credential | default(omit) }}"
+    scm_clean: "{{ item.scm_clean | default(omit) }}"
+    scm_update_on_launch: "{{ item.scm_update_on_launch | default(omit) }}"
+    scm_delete_on_update: "{{ item.scm_delete_on_update | default(omit) }}"
+    scm_url: "{{ item.scm_url | default(omit) }}"
+    scm_branch: "{{ item.scm_branch | default(omit) }}"
+    tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  with_items: "{{ tower_config_projects }}"
+
+- name: Configure Tower inventories
+  tower_inventory:
+    name: "{{ item.name }}"
+    organization: "{{ item.organization }}"
+    description: "{{ item.description | default(omit) }}"
+    tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  with_items: "{{ tower_config_inventories }}"
+
+# The configuration of inventory sources and job templates relies on the
+# default project by default.
+# We might need to wait a bit for the project to be ready.
+- name: Configure Tower inventory sources
+  tower_inventory_source:
+    name: "{{ item.name }}"
+    description: "{{ item.description | default(omit) }}"
+    inventory: "{{ item.inventory }}"
+    source: "{{ item.source }}"
+    source_project: "{{ item.source_project | default(omit) }}"
+    source_path: "{{ item.source_path | default(omit) }}"
+    update_on_project_update: "{{ item.update_on_project_update | default(omit) }}"
+    overwrite_vars: "{{ item.overwrite_vars | default(omit) }}"
+    tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  with_items: "{{ tower_config_inventory_sources }}"
+  retries: 5
+  delay: 5
+  register: sources
+  until: sources is successful
+
+# TODO: Set up all credentials https://github.com/ansible/ansible/issues/43234
+# Meanwhile, the self-tower credential needs to be added manually.
+- name: Configure Tower job templates
+  tower_job_template:
+    name: "{{ item.name }}"
+    description: "{{ item.description | default(omit) }}"
+    job_type: "{{ item.job_type }}"
+    inventory: "{{ item.inventory }}"
+    project: "{{ item.project }}"
+    playbook: "{{ item.playbook }}"
+    credential: "{{ item.credential }}"
+    become_enabled: "{{ item.become_enabled | default(omit) }}"
+    tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  with_items: "{{ tower_config_job_templates }}"
+  retries: 5
+  delay: 5
+  register: templates
+  until: templates is successful

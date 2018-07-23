@@ -1,0 +1,24 @@
+---
+all:
+  vars:
+    admin_username: admin
+    admin_password: password
+    nginx_http_port: "80"
+    nginx_https_port: "443"
+    pg_host: "127.0.0.1"
+    pg_port: "5432"
+    pg_database: tower
+    pg_username: tower
+    pg_password: password
+    rabbitmq_port: "5672"
+    rabbitmq_vhost: tower
+    rabbitmq_username: tower
+    rabbitmq_password: password
+    rabbitmq_cookie: cookie
+    # Needs to be true for fqdns and ip addresses
+    rabbitmq_use_long_name: false
+  children:
+    tower:
+      hosts:
+        localhost:
+          ansible_connection: local
