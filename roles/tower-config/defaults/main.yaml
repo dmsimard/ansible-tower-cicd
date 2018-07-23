@@ -1,0 +1,95 @@
+---
+#  Copyright (c) 2018 Red Hat, Inc.
+#
+#  This file is part of ansible-tower-cicd.
+#
+#  ansible-tower-cicd is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  ansible-tower-cicd is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with ansible-tower-cicd.  If not, see <http://www.gnu.org/licenses/>.
+
+# TODO: Verify why tower-cli's configuration is not taken into account for
+# Ansible Tower modules
+tower_config_verify_ssl: false
+
+tower_config_organizations:
+  - name: default-organization
+    description: default organization description
+    state: present
+
+tower_config_teams:
+  - name: default-team
+    description: default team description
+    organization: default-organization
+
+tower_config_users:
+  - username: default-user
+    password: password
+    email: user@example.org
+    first_name: default
+    last_name: user
+
+tower_config_roles:
+  - user: default-user
+    target_team: default-team
+    role: admin
+
+tower_config_credentials:
+  - name: noop
+    description: noop credential (i.e, running against localhost)
+    organization: default-organization
+    kind: ssh
+  - name: self-tower
+    description: Credentials for Tower itself
+    organization: default-organization
+    kind: tower
+    username: admin
+    password: password
+    host: "https://localhost"
+
+tower_config_projects:
+  - name: ansible-tower-cicd
+    description: Repository for infrastructure management
+    organization: default-organization
+    scm_type: git
+    scm_clean: true
+    scm_url: https://github.com/dmsimard/ansible-tower-cicd
+
+tower_config_inventories:
+  - name: default-inventory
+    description: Default inventory
+    organization: default-organization
+
+tower_config_inventory_sources:
+  - name: default-inventory-source
+    description: Default inventory source
+    inventory: default-inventory
+    source: scm
+    source_project: ansible-tower-cicd
+    source_path: inventory.yaml
+    update_on_project_update: true
+    overwrite_vars: true
+
+tower_config_job_templates:
+  - name: Run Tower Setup
+    description: Runs the tower-setup.yaml playbook
+    job_type: run
+    inventory: default-inventory
+    project: ansible-tower-cicd
+    playbook: playbooks/tower-setup.yaml
+    machine_credential: noop
+  - name: Run Tower Config
+    description: Runs the tower-config.yaml playbook
+    job_type: run
+    inventory: default-inventory
+    project: ansible-tower-cicd
+    playbook: playbooks/tower-config.yaml
+    machine_credential: noop
