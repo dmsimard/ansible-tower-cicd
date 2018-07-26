@@ -16,5 +16,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ansible-tower-cicd.  If not, see <http://www.gnu.org/licenses/>.
 
-- import_playbook: tower-setup.yaml
-- import_playbook: tower-config.yaml
+# Use include instead of import_playbook pending release of bugfix:
+# https://github.com/ansible/awx/pull/1298/commits/42ff1cfd677862c644173656d178d13a6b92a1af
+
+- include: tower-setup.yaml
+- include: tower-config.yaml
