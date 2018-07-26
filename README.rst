@@ -51,8 +51,7 @@ for the ``tower-setup`` role (default: ``/root/tower-license.json``).
 Install dependencies on CentOS or RHEL by running ``dependencies.sh`` and then
 run::
 
-    ansible-playbook playbooks/tower-setup.yaml
-    ansible-playbook playbooks/tower-config.yaml
+    ansible-playbook playbooks/tower-deploy.yaml
 
 Known issues
 ============
