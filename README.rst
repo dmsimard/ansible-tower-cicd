@@ -48,7 +48,8 @@ as well as the ``tower-setup`` role and ``tower-config`` role.
 If activating a license, make sure you have a license file at the specified path
 for the ``tower-setup`` role (default: ``/root/tower-license.json``).
 
-Install dependencies by running ``dependencies.sh`` and then run::
+Install dependencies on CentOS or RHEL by running ``dependencies.sh`` and then
+run::
 
     ansible-playbook playbooks/tower-setup.yaml
     ansible-playbook playbooks/tower-config.yaml
