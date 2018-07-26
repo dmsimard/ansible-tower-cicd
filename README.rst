@@ -38,6 +38,7 @@ The following are currently supported and automated:
 - `Inventories <https://docs.ansible.com/ansible/devel/modules/tower_inventory_module.html>`_
 - `Inventory sources <https://docs.ansible.com/ansible/devel/modules/tower_inventory_source_module.html>`_
 - `Job templates <https://docs.ansible.com/ansible/devel/modules/tower_job_template_module.html>`_
+- `Schedules <https://github.com/dmsimard/ansible-tower-cicd/blob/master/library/tower_schedule.py>`_
 
 Usage
 =====

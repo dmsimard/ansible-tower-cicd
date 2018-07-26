@@ -124,3 +124,20 @@
   delay: 5
   register: templates
   until: templates is successful
+
+- name: Configure Tower schedules
+  tower_schedule:
+    name: "{{ item.name }}"
+    description: "{{ item.description | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
+    project: "{{ item.project | default(omit) }}"
+    job_template: "{{ item.job_template | default(omit) }}"
+    inventory_source: "{{ item.inventory_source | default(omit) }}"
+    frequency: "{{ item.frequency | default(omit) }}"
+    frequency_unit: "{{ item.frequency_unit | default(omit) }}"
+    tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  with_items: "{{ tower_config_schedules }}"
+#  retries: 5
+#  delay: 5
+#  register: schedules
+#  until: schedules is successful

@@ -79,17 +79,25 @@ tower_config_inventory_sources:
     overwrite_vars: true
 
 tower_config_job_templates:
-  - name: Run Tower Setup
-    description: Runs the tower-setup.yaml playbook
+  - name: run-tower-deploy
+    description: Runs the tower-deploy.yaml playbook
     job_type: run
     inventory: default-inventory
     project: ansible-tower-cicd
-    playbook: playbooks/tower-setup.yaml
+    playbook: playbooks/tower-deploy.yaml
     credential: noop
-  - name: Run Tower Config
-    description: Runs the tower-config.yaml playbook
-    job_type: run
-    inventory: default-inventory
+
+tower_config_schedules:
+  - name: ansible-tower-cicd update schedule
+    state: present
+    description: Schedule to update ansible-tower-cicd
     project: ansible-tower-cicd
-    playbook: playbooks/tower-config.yaml
-    credential: noop
+    frequency: 30
+    frequency_unit: minute
+  # TODO: Set state present once the credentials issue has been figured out
+  - name: run-tower-deploy execute schedule
+    state: disabled
+    description: Schedule to execute run-tower-deploy
+    job_template: run-tower-deploy
+    frequency: 1
+    frequency_unit: hour
