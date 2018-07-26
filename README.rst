@@ -45,18 +45,31 @@ Usage
 As necessary, supply your own configuration for the ``inventory.yaml`` file
 as well as the ``tower-setup`` role and ``tower-config`` role.
 
-If activating a license, make sure you have a license file at the specified path
-for the ``tower-setup`` role (default: ``/root/tower-license.json``).
-
 Install dependencies on CentOS or RHEL by running ``dependencies.sh`` and then
 run::
 
     ansible-playbook playbooks/tower-deploy.yaml
 
+Activating the Ansible Tower License
+====================================
+
+By default, the ``tower-setup`` role will not attempt to activate a license and
+Ansible Tower will prompt you for a license the first time you log in to the
+instance.
+
+If you'd like to activate the license automatically, set
+``tower_setup_license_configure`` to ``True`` and have a license file ready at the
+specified path for the ``tower-setup`` role (default: ``/root/tower-license.json``).
+
+The role will pick up the license file from the node where Ansible is being run
+from with a file lookup. It will not be uploaded to or sourced from the nodes
+in the inventory.
+
 Known issues
 ============
 
 - It is not possible to attach more than one credential to job templates: https://github.com/ansible/ansible/issues/43234
+- Activating a license automatically requires users to add ``"eula_accepted": true`` manually to their JSON license file.
 
 Contributors
 ============

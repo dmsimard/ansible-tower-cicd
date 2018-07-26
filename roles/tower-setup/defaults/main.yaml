@@ -21,7 +21,7 @@ tower_setup_version: 3.2.5
 tower_setup_archive: "{{ tower_setup_basename }}-{{ tower_setup_version }}.tar.gz"
 tower_setup_release_url: "https://releases.ansible.com/ansible-tower/setup/{{ tower_setup_archive }}"
 
-tower_setup_license_configure: True
+tower_setup_license_configure: False
 # This is a location on the *control* node where Ansible is being run from.
 # Note that the Ansible Tower license file does not contain a key for "eula_accepted".
 # When supplying this file, you'll need to manually add an '"eula_accepted": true'

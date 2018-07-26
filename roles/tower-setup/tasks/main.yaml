@@ -123,5 +123,6 @@
   vars:
     license: "{{ lookup('file', tower_setup_license_file) | from_json }}"
   command: tower-cli setting modify LICENSE '{{ license | to_json }}'
+  when: tower_setup_license_configure | bool
   tags:
     - tower-license
