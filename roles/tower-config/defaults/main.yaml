@@ -16,9 +16,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ansible-tower-cicd.  If not, see <http://www.gnu.org/licenses/>.
 
+# Whether tasks should be logged or not to hide potentially sensitive
+# information from the console.
+tower_config_no_log: True
+
 # TODO: Verify why tower-cli's configuration is not taken into account for
 # Ansible Tower modules
-tower_config_verify_ssl: false
+tower_config_verify_ssl: False
 
 tower_config_organizations:
   - name: default-organization

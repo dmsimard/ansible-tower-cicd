@@ -72,6 +72,17 @@ Known issues
 - It is not possible to attach more than one credential to job templates: https://github.com/ansible/ansible/issues/43234
 - Activating a license automatically requires users to add ``"eula_accepted": true`` manually to their JSON license file.
 
+Troubleshooting
+===============
+
+``no_log`` is enabled by default for tasks that configure Tower resources in
+the ``tower-config`` role because they could otherwise print sensitive
+information to the console.
+
+If you're troubleshooting errors with that role, you can disable ``no_log``
+by setting the variable ``tower_config_no_log`` to ``False`` to help you see
+what is being sent and received.
+
 Contributors
 ============
 

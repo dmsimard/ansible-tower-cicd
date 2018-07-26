@@ -22,6 +22,7 @@
     description: "{{ item.description | default(omit) }}"
     state: "{{ item.state | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_organizations }}"
 
 - name: Configure Tower teams
@@ -30,6 +31,7 @@
     organization: "{{ item.organization }}"
     description: "{{ item.description | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_teams }}"
 
 - name: Configure Tower users
@@ -40,6 +42,7 @@
     first_name: "{{ item.first_name }}"
     last_name: "{{ item.last_name }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_users }}"
 
 - name: Configure Tower roles
@@ -48,6 +51,7 @@
     target_team: "{{ item.target_team }}"
     role: "{{ item.role }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_roles }}"
 
 - name: Configure Tower credentials
@@ -60,6 +64,7 @@
     password: "{{ item.password | default(omit) }}"
     host: "{{ item.host | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_credentials }}"
 
 - name: Configure Tower projects
@@ -76,6 +81,7 @@
     scm_url: "{{ item.scm_url | default(omit) }}"
     scm_branch: "{{ item.scm_branch | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_projects }}"
 
 - name: Configure Tower inventories
@@ -84,6 +90,7 @@
     organization: "{{ item.organization }}"
     description: "{{ item.description | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_inventories }}"
 
 # The configuration of inventory sources and job templates relies on the
@@ -100,6 +107,7 @@
     update_on_project_update: "{{ item.update_on_project_update | default(omit) }}"
     overwrite_vars: "{{ item.overwrite_vars | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_inventory_sources }}"
   retries: 5
   delay: 5
@@ -119,6 +127,7 @@
     credential: "{{ item.credential }}"
     become_enabled: "{{ item.become_enabled | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_job_templates }}"
   retries: 5
   delay: 5
@@ -136,8 +145,9 @@
     frequency: "{{ item.frequency | default(omit) }}"
     frequency_unit: "{{ item.frequency_unit | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+  no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_schedules }}"
-#  retries: 5
-#  delay: 5
-#  register: schedules
-#  until: schedules is successful
+  retries: 5
+  delay: 5
+  register: schedules
+  until: schedules is successful

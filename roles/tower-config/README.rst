@@ -10,6 +10,8 @@ Variables
 
 For role defaults, see the ``defaults/main.yaml`` file.
 
+- ``tower_config_no_log``: Toggles no_log on or off for tasks with sensitive information
+- ``tower_config_verify_ssl``: Whether or not to verify the Tower SSL certificate
 - ``tower_config_organizations``: A list of organizations
 - ``tower_config_teams``: A list of teams
 - ``tower_config_users``: A list of users
