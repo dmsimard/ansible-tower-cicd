@@ -16,27 +16,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ansible-tower-cicd.  If not, see <http://www.gnu.org/licenses/>.
 
-# Fail early if no license is provided
-- when: tower_setup_license_configure | bool
-  block:
-    - name: Check if license file exists
-      stat:
-        path: "{{ tower_setup_license_file }}"
-      delegate_to: localhost
-      register: license_exists
-      tags:
-        - tower-license
-
-    - name: Assert that license file is provided
-      fail:
-        msg: >-
-          License file at {{ tower_setup_license_file }} doesn't exist.
-          You can either download your license to that location or provide an
-          alternative path for the 'tower_setup_license' variable.
-      when: not license_exists.stat.exists
-      tags:
-        - tower-license
-
 # TODO: Make this task idempotent
 - name: Ensure the extras repository is enabled
   become: yes
@@ -72,12 +51,12 @@
   tags:
     - tower-install
 
-- name: Create inventory file
+- name: Create extra-vars file
   become: yes
   no_log: yes
   copy:
-    content: "{{ tower_setup_inventory | to_nice_yaml(indent=2) }}"
-    dest: "{{ tower_setup_inventory_file }}"
+    content: "{{ tower_setup_config | to_nice_yaml }}"
+    dest: /etc/tower-setup/extra-vars.yaml
     owner: root
     group: root
     mode: 0600
@@ -88,17 +67,18 @@
   become: yes
   vars:
     setup: "/var/tmp/{{ tower_setup_basename }}-{{ tower_setup_version }}/setup.sh"
-  command: "{{ setup }} -i {{ tower_setup_inventory_file }} -e create_preload_data=False"
+  command: {{ setup }} -e @/etc/tower-setup/extra-vars.yaml
   tags:
     - tower-install
 
 - name: Install ansible-tower-cli
   become: yes
-  yum:
+  package:
     name: ansible-tower-cli
     state: present
   tags:
     - tower-cli
+    - tower-post
 
 # ini_file is used instead of ``tower-cli config`` because tower-cli doesn't
 # accept blank (null) values for configuration options.
@@ -116,13 +96,15 @@
   with_dict: "{{ tower_setup_cli_config }}"
   tags:
     - tower-cli
+    - tower-post
 
 # TODO: Write a tower_license module
 - name: Configure or update license
   no_log: yes
   vars:
-    license: "{{ lookup('file', tower_setup_license_file) | from_json }}"
+    license: "{{ tower_setup_license | from_json }}"
   command: tower-cli setting modify LICENSE '{{ license | to_json }}'
   when: tower_setup_license_configure | bool
   tags:
     - tower-license
+    - tower-post

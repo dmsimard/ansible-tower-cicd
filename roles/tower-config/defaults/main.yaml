@@ -26,12 +26,12 @@ tower_config_verify_ssl: False
 
 tower_config_organizations:
   - name: default-organization
-    description: default organization description
+    description: Default Organization
     state: present
 
 tower_config_teams:
   - name: default-team
-    description: default team description
+    description: default team
     organization: default-organization
 
 tower_config_users:
@@ -83,12 +83,12 @@ tower_config_inventory_sources:
     overwrite_vars: true
 
 tower_config_job_templates:
-  - name: run-tower-deploy
-    description: Runs the tower-deploy.yaml playbook
+  - name: run-tower-config
+    description: Runs the tower-config.yaml playbook
     job_type: run
     inventory: default-inventory
     project: ansible-tower-cicd
-    playbook: playbooks/tower-deploy.yaml
+    playbook: playbooks/tower-config.yaml
     credential: noop
 
 tower_config_schedules:
@@ -99,9 +99,9 @@ tower_config_schedules:
     frequency: 30
     frequency_unit: minute
   # TODO: Set state present once the credentials issue has been figured out
-  - name: run-tower-deploy execute schedule
+  - name: run-tower-config execute schedule
     state: disabled
-    description: Schedule to execute run-tower-deploy
-    job_template: run-tower-deploy
+    description: Schedule to execute run-tower-config
+    job_template: run-tower-config
     frequency: 1
     frequency_unit: hour

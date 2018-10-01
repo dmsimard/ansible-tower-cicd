@@ -17,25 +17,48 @@
 #  along with ansible-tower-cicd.  If not, see <http://www.gnu.org/licenses/>.
 
 tower_setup_basename: ansible-tower-setup
-tower_setup_version: 3.2.5
+tower_setup_version: 3.3.0-1
 tower_setup_archive: "{{ tower_setup_basename }}-{{ tower_setup_version }}.tar.gz"
 tower_setup_release_url: "https://releases.ansible.com/ansible-tower/setup/{{ tower_setup_archive }}"
+tower_setup_config:
+  create_preload_data: false
+  admin_username: admin
+  admin_password: password
+  nginx_http_port: "80"
+  nginx_https_port: "443"
+  pg_host: "127.0.0.1"
+  pg_port: "5432"
+  pg_database: tower
+  pg_username: tower
+  pg_password: password
+  rabbitmq_port: "5672"
+  rabbitmq_vhost: tower
+  rabbitmq_username: tower
+  rabbitmq_password: password
+  rabbitmq_cookie: cookie
+  # Needs to be true for fqdns and ip addresses
+  rabbitmq_use_long_name: false
 
-tower_setup_license_configure: False
-# This is a location on the *control* node where Ansible is being run from.
-# Note that the Ansible Tower license file does not contain a key for "eula_accepted".
-# When supplying this file, you'll need to manually add an '"eula_accepted": true'
-# key to the json file.
-tower_setup_license_file: /root/tower-license.json
-
-tower_setup_inventory_file: /etc/tower-setup/tower-setup-inventory.yaml
-# TODO: Is there a better way ?
-tower_setup_inventory: "{{ lookup('file', playbook_dir + '/../inventory.yaml') | from_yaml }}"
+tower_setup_license_configure: false
+# The literal license JSON, note that the "eula_accepted" key needs to be added manually.
+tower_setup_license:
+#  {
+#    "company_name": "company_name",
+#    "contact_email": "contact_email",
+#    "contact_name": "contact_name",
+#    "instance_count": 1,
+#    "license_date": 1,
+#    "license_key": "license_key",
+#    "license_type": "enterprise",
+#    "subscription_name": "subscription_name",
+#    "trial": false,
+#    "eula_accepted": true
+#  }
 
 tower_setup_cli_config:
   host: "http://localhost"
-  username: "{{ tower_setup_inventory.all.vars.admin_username }}"
-  password: "{{ tower_setup_inventory.all.vars.admin_password }}"
+  username: "{{ tower_setup_config.admin_username }}"
+  password: "{{ tower_setup_config.admin_password }}"
   verify_ssl: false
   use_token: false
   verbose: false
