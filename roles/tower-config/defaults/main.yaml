@@ -89,7 +89,7 @@ tower_config_job_templates:
     inventory: default-inventory
     project: ansible-tower-cicd
     playbook: playbooks/tower-config.yaml
-    credential: noop
+    credential: self-tower
 
 tower_config_schedules:
   - name: ansible-tower-cicd update schedule
