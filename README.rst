@@ -43,13 +43,25 @@ The following are currently supported and automated:
 Usage
 =====
 
-As necessary, supply your own configuration for the ``inventory.yaml`` file
-as well as the ``tower-setup`` role and ``tower-config`` role.
+tl;dr::
 
-Install dependencies on CentOS or RHEL by running ``dependencies.sh`` and then
-run::
+    # Deploys Tower on localhost with defaults on a vanilla RHEL or CentOS server
+    git clone https://github.com/dmsimard/ansible-tower-cicd
+    cd ansible-tower-cicd
 
-    ansible-playbook playbooks/tower-deploy.yaml
+    # Install dependencies
+    ./dependencies.sh
+
+    # Install Tower itself
+    ansible-playbook -i inventory.yaml playbooks/tower-setup.yaml
+
+    # Configure Tower for the first time
+    ansible-playbook playbooks/tower-config.yaml
+
+    # Tower will now keep itself up to date using this repository
+
+As necessary, supply your own configuration as extra-vars to override the role
+defaults.
 
 Activating the Ansible Tower License
 ====================================
@@ -59,12 +71,8 @@ Ansible Tower will prompt you for a license the first time you log in to the
 instance.
 
 If you'd like to activate the license automatically, set
-``tower_setup_license_configure`` to ``True`` and have a license file ready at the
-specified path for the ``tower-setup`` role (default: ``/root/tower-license.json``).
-
-The role will pick up the license file from the node where Ansible is being run
-from with a file lookup. It will not be uploaded to or sourced from the nodes
-in the inventory.
+``tower_setup_license_configure`` to ``True`` and supply a json license in-line
+for the variable ``tower_setup_license``.
 
 Known issues
 ============
