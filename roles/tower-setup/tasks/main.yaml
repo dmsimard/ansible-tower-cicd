@@ -67,7 +67,7 @@
   become: yes
   vars:
     setup: "/var/tmp/{{ tower_setup_basename }}-{{ tower_setup_version }}/setup.sh"
-  command: {{ setup }} -e @/etc/tower-setup/extra-vars.yaml
+  command: "{{ setup }} -e @/etc/tower-setup/extra-vars.yaml"
   tags:
     - tower-install
 
