@@ -90,6 +90,7 @@ tower_config_job_templates:
     project: ansible-tower-cicd
     playbook: playbooks/tower-config.yaml
     credential: self-tower
+    machine_credential: noop
 
 tower_config_schedules:
   - name: ansible-tower-cicd update schedule

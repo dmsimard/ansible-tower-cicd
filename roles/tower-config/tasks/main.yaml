@@ -125,6 +125,7 @@
     project: "{{ item.project }}"
     playbook: "{{ item.playbook }}"
     credential: "{{ item.credential }}"
+    machine_credential: "{{ item.machine_credential | default(omit) }}"
     become_enabled: "{{ item.become_enabled | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
   no_log: "{{ tower_config_no_log }}"
