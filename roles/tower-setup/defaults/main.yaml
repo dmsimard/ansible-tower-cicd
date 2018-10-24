@@ -20,6 +20,7 @@ tower_setup_basename: ansible-tower-setup
 tower_setup_version: 3.3.0-1
 tower_setup_archive: "{{ tower_setup_basename }}-{{ tower_setup_version }}.tar.gz"
 tower_setup_release_url: "https://releases.ansible.com/ansible-tower/setup/{{ tower_setup_archive }}"
+tower_setup_host: "https://localhost"
 tower_setup_config:
   create_preload_data: false
   admin_username: admin
@@ -56,7 +57,7 @@ tower_setup_license:
 #  }
 
 tower_setup_cli_config:
-  host: "http://localhost"
+  host: "{{ tower_setup_host }}"
   username: "{{ tower_setup_config.admin_username }}"
   password: "{{ tower_setup_config.admin_password }}"
   verify_ssl: false
