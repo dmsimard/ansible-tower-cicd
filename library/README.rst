@@ -9,7 +9,9 @@ Doing so should be documented so that we can eventually stop carrying them.
 +------------------------+-----------------------------------------------+
 | **module**             | **reason**                                    |
 +------------------------+-----------------------------------------------+
-| tower_schedule         | Not yet upstream_                             |
+| tower_job_template     | Picked up from devel due to changing API_     |
++------------------------+-----------------------------------------------+
+| tower_schedule         | Not yet upstream                              |
 +------------------------+-----------------------------------------------+
 
-.. _upstream: https://github.com/ansible/ansible/pull/43437
+.. _API: https://github.com/ansible/ansible/issues/43234
