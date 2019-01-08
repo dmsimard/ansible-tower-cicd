@@ -20,6 +20,7 @@
 - name: Ensure the extras repository is enabled
   become: yes
   command: yum-config-manager --enable extras
+  when: ansible_os_family == 'RedHat'
   tags:
     - tower-install
 
@@ -76,6 +77,24 @@
   package:
     name: ansible-tower-cli
     state: present
+  when: ansible_distribution != 'Ubuntu' or ansible_distribution_version is version('17.10', '>=')
+  tags:
+    - tower-cli
+    - tower-post
+
+- when: ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('17.10', '<')
+  name: Install ansible-tower-cli using pip (distribution package not available)
+  become: yes
+  block:
+    - name: Install pip
+      vars:
+        python_pkg_suffix: "{{ (ansible_python.version.major > 2) | ternary(ansible_python.version.major, '') }}"
+      package:
+        name: 'python{{ python_pkg_suffix }}-pip'
+    - name: Install ansible-tower-cli
+      pip:
+        name: ansible-tower-cli
+        state: present
   tags:
     - tower-cli
     - tower-post
