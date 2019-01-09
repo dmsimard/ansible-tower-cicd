@@ -20,7 +20,6 @@ tower_setup_basename: ansible-tower-setup
 tower_setup_version: 3.3.0-1
 tower_setup_archive: "{{ tower_setup_basename }}-{{ tower_setup_version }}.tar.gz"
 tower_setup_release_url: "https://releases.ansible.com/ansible-tower/setup/{{ tower_setup_archive }}"
-tower_setup_host: "https://localhost"
 tower_setup_config:
   create_preload_data: false
   admin_username: admin
@@ -39,6 +38,13 @@ tower_setup_config:
   rabbitmq_cookie: cookie
   # Needs to be true for fqdns and ip addresses
   rabbitmq_use_long_name: false
+
+tower_setup_host: >-
+  {% if tower_setup_config.nginx_disable_https|default(False) %}
+  http://localhost
+  {% else %}
+  https://localhost
+  {% endif %}
 
 tower_setup_license_configure: false
 # The literal license JSON, note that the "eula_accepted" key needs to be added manually.
