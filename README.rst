@@ -79,6 +79,7 @@ Known issues
 
 - It is not possible to attach more than one credential to job templates: https://github.com/ansible/ansible/issues/43234
 - Activating a license automatically requires users to add ``"eula_accepted": true`` manually to their JSON license file.
+- Module failures on "tower_verify_ssl" parameter: https://github.com/ansible/ansible/commit/77e01e6abc67efe4056924c620281f29a42c0159
 
 Troubleshooting
 ===============
