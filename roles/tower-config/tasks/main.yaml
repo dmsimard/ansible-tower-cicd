@@ -22,6 +22,8 @@
     description: "{{ item.description | default(omit) }}"
     state: "{{ item.state | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+    tower_username: "{{ tower_admin_username }}"
+    tower_password: "{{ tower_admin_password }}"
   no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_organizations }}"
 
@@ -31,6 +33,8 @@
     organization: "{{ item.organization }}"
     description: "{{ item.description | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+    tower_username: "{{ tower_admin_username }}"
+    tower_password: "{{ tower_admin_password }}"
   no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_teams }}"
 
@@ -42,6 +46,8 @@
     first_name: "{{ item.first_name }}"
     last_name: "{{ item.last_name }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+    tower_username: "{{ tower_admin_username }}"
+    tower_password: "{{ tower_admin_password }}"
   no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_users }}"
 
@@ -51,6 +57,8 @@
     target_team: "{{ item.target_team }}"
     role: "{{ item.role }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+    tower_username: "{{ tower_admin_username }}"
+    tower_password: "{{ tower_admin_password }}"
   no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_roles }}"
 
@@ -64,6 +72,8 @@
     password: "{{ item.password | default(omit) }}"
     host: "{{ item.host | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+    tower_username: "{{ tower_admin_username }}"
+    tower_password: "{{ tower_admin_password }}"
   no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_credentials }}"
 
@@ -81,6 +91,8 @@
     scm_url: "{{ item.scm_url | default(omit) }}"
     scm_branch: "{{ item.scm_branch | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+    tower_username: "{{ tower_admin_username }}"
+    tower_password: "{{ tower_admin_password }}"
   no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_projects }}"
 
@@ -90,6 +102,8 @@
     organization: "{{ item.organization }}"
     description: "{{ item.description | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+    tower_username: "{{ tower_admin_username }}"
+    tower_password: "{{ tower_admin_password }}"
   no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_inventories }}"
 
@@ -107,6 +121,8 @@
     update_on_project_update: "{{ item.update_on_project_update | default(omit) }}"
     overwrite_vars: "{{ item.overwrite_vars | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+    tower_username: "{{ tower_admin_username }}"
+    tower_password: "{{ tower_admin_password }}"
   no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_inventory_sources }}"
   retries: 5
@@ -129,6 +145,8 @@
     credentials: "{{ item.credentials | default(omit) }}"
     become_enabled: "{{ item.become_enabled | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+    tower_username: "{{ tower_admin_username }}"
+    tower_password: "{{ tower_admin_password }}"
   no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_job_templates }}"
   retries: 5
@@ -147,6 +165,8 @@
     frequency: "{{ item.frequency | default(omit) }}"
     frequency_unit: "{{ item.frequency_unit | default(omit) }}"
     tower_verify_ssl: "{{ tower_config_verify_ssl }}"
+    tower_username: "{{ tower_admin_username }}"
+    tower_password: "{{ tower_admin_password }}"
   no_log: "{{ tower_config_no_log }}"
   with_items: "{{ tower_config_schedules }}"
   retries: 5

@@ -16,6 +16,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ansible-tower-cicd.  If not, see <http://www.gnu.org/licenses/>.
 
+tower_admin_username: admin
+tower_admin_password: password
+
 # Whether tasks should be logged or not to hide potentially sensitive
 # information from the console.
 tower_config_no_log: True

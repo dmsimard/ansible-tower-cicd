@@ -103,7 +103,6 @@
 # accept blank (null) values for configuration options.
 - name: Configure tower-cli
   become: yes
-  no_log: yes
   ini_file:
     path: /etc/tower/tower_cli.cfg
     section: general
@@ -122,7 +121,7 @@
   no_log: yes
   vars:
     license: "{{ tower_setup_license | from_json }}"
-  command: tower-cli setting modify LICENSE '{{ license | to_json }}'
+  command: tower-cli setting modify -u '{{ tower_admin_username }}' -p '{{ tower_admin_password }}' LICENSE '{{ license | to_json }}'
   when: tower_setup_license_configure | bool
   tags:
     - tower-license
