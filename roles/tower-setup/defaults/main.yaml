@@ -16,14 +16,16 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ansible-tower-cicd.  If not, see <http://www.gnu.org/licenses/>.
 
+tower_admin_username: admin
+tower_admin_password: password
 tower_setup_basename: ansible-tower-setup
 tower_setup_version: 3.6.1-1
 tower_setup_archive: "{{ tower_setup_basename }}-{{ tower_setup_version }}.tar.gz"
 tower_setup_release_url: "https://releases.ansible.com/ansible-tower/setup/{{ tower_setup_archive }}"
 tower_setup_config:
   create_preload_data: false
-  admin_username: admin
-  admin_password: password
+  admin_username: '{{ tower_admin_username }}'
+  admin_password: '{{ tower_admin_password }}'
   nginx_http_port: "80"
   nginx_https_port: "443"
   pg_host: "127.0.0.1"
@@ -64,8 +66,6 @@ tower_setup_license:
 
 tower_setup_cli_config:
   host: "{{ tower_setup_host }}"
-  username: "{{ tower_setup_config.admin_username }}"
-  password: "{{ tower_setup_config.admin_password }}"
   verify_ssl: false
   use_token: false
   verbose: false
