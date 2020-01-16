@@ -72,6 +72,16 @@
   tags:
     - tower-install
 
+- name: Wait for supervisor
+  shell:
+    executable: /bin/bash
+    cmd: |
+     set -o errexit -o pipefail
+     supervisorctl status | awk '$2 != "RUNNING" { print $2 }'
+  register: supervisorctl_status
+  until: supervisorctl_status is success and supervisorctl_status.stdout == ''
+  retries: 6
+
 - name: Install ansible-tower-cli
   become: yes
   package:
