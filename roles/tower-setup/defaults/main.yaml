@@ -19,7 +19,7 @@
 tower_admin_username: admin
 tower_admin_password: password
 tower_setup_basename: ansible-tower-setup
-tower_setup_version: 3.6.1-1
+tower_setup_version: 3.6.2-1
 tower_setup_archive: "{{ tower_setup_basename }}-{{ tower_setup_version }}.tar.gz"
 tower_setup_release_url: "https://releases.ansible.com/ansible-tower/setup/{{ tower_setup_archive }}"
 tower_setup_config:
